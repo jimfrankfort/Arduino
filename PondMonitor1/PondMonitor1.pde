@@ -35,6 +35,7 @@ String menu1[5]=
 		
 //-------------------------------------------------Menu related variables-------------------------------------------
 
+boolean MenuInUse;	// if true, then the Menu is in use.  Used by ProcessMenu to only process key presses when Menu is active. Needed because other parts of the program could be using the keypad.
 String MenuName;	// static variable holding name of menu, passed to the menu routines by reference
 int	MenuLineCnt;	// count of lines in string matrix making up menu
 int	MenuIndex;		// index to MenuLine being displayed
@@ -309,6 +310,25 @@ void MenuLineSetup(String Mline)
 	
 }
 //------------------------------------------
+void MenuStartStop (boolean action)
+{
+		/*
+		Used to indicate that the Menu is in use and that keypresses should be processed by the menu routines
+		*/
+		
+		if (action==true)
+		{
+			// Menu processing beginning, set status variable
+			MenuInUse= true;	
+		} 
+		else
+		{
+			// MenuProcessing is being stopped, set status variable
+			MenuInUse=false;
+		}
+		
+}
+//------------------------------------------
 void MenuSetup(String mnuName, int mnuLines, String *mnu)
 {
 	/* Starts the Menu passed in by reference. 
@@ -317,8 +337,11 @@ void MenuSetup(String mnuName, int mnuLines, String *mnu)
 		"option1   option2   option3   etc", where there must be at least 2 spaces between menuLine options
 		
 		This routine initializes some Menu specific variables (pointer to array, name of menu, max number of lines, and index
-		After that, it calls a routine to put the first MenuLine on the display
-	*/
+		After that, it calls a routine to put the first MenuLine on the display.  Subsequent processing occurs when user interacts with the keys (Rt, Lt, Up, Dn, and Select). 
+		The main loop of the program polls to see if a key is ready to be read via ReadKey().  If true, then the program must pass the key to the ProcessMenu routine
+		which will handle all interaction with the user.  The main loop needs to poll to see if the user has made a selection via checking if MenuUserMadeSelection==true, and if so, reads
+		the results from the Menu variables....menu name, row name, and user selection.  These are then used to direct logic in the main loop of the program.
+		*/
 	MenuPntr = mnu;			// variable to hold a pointer to the String array that is the menu
 	MenuName = mnuName;		// name of the Menu, returned when user makes a selection
 	MenuIndex = 0;			// initialize index to MenuLine within String array that is the Menu
@@ -330,42 +353,21 @@ void MenuSetup(String mnuName, int mnuLines, String *mnu)
 
 
 //------------------------------------------
+void ProcessMenu(int KeyID)
+{
 	/*
-	void debugPrint(String marker)	//debug for menu 
-	{
-		Serial.print("in section "+ marker +": MenuStartPos=");
-		Serial.print(MenuStartPos);
-		Serial.print(", MenuPos=");
-		Serial.print(MenuPos);
-		Serial.print(", MenuEndPos=");
-		Serial.println(MenuEndPos);
-	}
+	Main processing routine for Menu.  This is called after user has pressed a key (up, dn, rt, lt, or Select) that has been debounced by the LS_Key routines.  
+	If the Menu is in use (MenuInUse==true), then the user key press is processed.  MenuSetup was previously called and passed in the name of the menu, the
+	array of menuLine strings, and the number of menuLines.  This routine responds to the keys pressed as follows:
+		- Rt: slides the MenuLine to the right, aligining the next menu option with the left side of the display
+		- Lt: slides the MenuLine to the left, aligining the previous menu option with the left side of the display
+		- Down: displays the next MenuLine (index+1) in the menu
+		- Up: displays the previous MenuLine (index-1) in the menu
+		- Select: sets variables to pass out the MenuName, MenuLineName, and MenuSelection.  Tells the code that the user made a selection by setting MenuUserMadeSelection= true.
 	*/
-
-//--------------------------------------------------------main loop -------------------------------
-
-void setup()
-{
- 
-	Serial.begin(9600);
-  
-	KeyPoll(true);	// Begin polling the keypad  
-
-	//initialize display
-	LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
-
-	MenuSetup("Menu1",5,menu1); // Prepare Menu1 and display the first MenuLine, array has 5 lines (starting at 1)
-	
-	//MenuLineSetup(TmpMenuLine); // set up and display MenuLine 	
-
-}
-//--------------------------------------------------------main loop -------------------------------
-
-void loop()
-{
-	Tmr.update();
-	if (ReadKey() != NO_KEY)
+	if (MenuInUse==true)
 	{
+		//if here, then menu processing should be occurring, so use the value of the key pressed and act accordingly.
 		switch (MenuMode)
 		{
 			case (1):	// this is an array of 1 or more menuLines, where each menuLine has a title and options.
@@ -503,8 +505,8 @@ void loop()
 						if (MenuIndex!=0)
 						{
 							MenuIndex--;	//decrement MenuIndex
-							MenuLineSetup(*(MenuPntr+MenuIndex)); // extract and display MenuLine[MenuIndex]							
-						}							
+							MenuLineSetup(*(MenuPntr+MenuIndex)); // extract and display MenuLine[MenuIndex]
+						}
 						break;
 					}	// done with UP_KEY
 					
@@ -532,6 +534,47 @@ void loop()
 			}	// end case menuOption = 3 = date
 
 		}	// end switch MenuMode
+	} // end if MenuInUse==true
+	
+}
+//------------------------------------------
+	/*
+	void debugPrint(String marker)	//debug for menu 
+	{
+		Serial.print("in section "+ marker +": MenuStartPos=");
+		Serial.print(MenuStartPos);
+		Serial.print(", MenuPos=");
+		Serial.print(MenuPos);
+		Serial.print(", MenuEndPos=");
+		Serial.println(MenuEndPos);
+	}
+	*/
+
+//--------------------------------------------------------main loop -------------------------------
+
+void setup()
+{
+ 
+	Serial.begin(9600);
+  
+	KeyPoll(true);	// Begin polling the keypad  
+
+	//initialize display
+	LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
+
+	MenuStartStop(true);		// indicate that menu processing will occur. Tells main loop to pass key presses to the Menu
+	MenuSetup("Menu1",5,menu1); // Prepare Menu1 and display the first MenuLine, array has 5 lines (starting at 1)
+
+
+}
+//--------------------------------------------------------main loop -------------------------------
+
+void loop()
+{
+	Tmr.update();
+	if (ReadKey() != NO_KEY)
+	{
+		ProcessMenu(LS_curKey);	// routine will process key only if MenuInUse==true, global set by MenuStartStop()	
 	}//if (ReadKey() != NO_KEY)
 	
 	if(	MenuUserMadeSelection==true)
