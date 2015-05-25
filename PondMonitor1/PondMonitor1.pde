@@ -6,18 +6,49 @@
 //Pin assignments for DFRobot LCD Keypad Shield
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
-Timer Tmr;
+Timer Tmr;	// timer object used for polling at timed intervals
 
 int ledEvent;
-String TmpMenuLine= "Row_1,---Main Menu---,run   set_time   sensor_tst   calibrate";	// for testing
-//String TmpMenuLine = "Row_1,Yes No";
+/*
+#define	NumOfMenuLines 5
+typedef struct _Menu
+{
+	String	MenuName;
+	int		MenuLineIndex;	//points to the MenuLine
+	int		NumOfLines;		//number of MenuLines in this menu
+	String	MenuLine[NumOfMenuLines];// holds each MenuLine
+};
+
+_Menu	tstMenu;
+*/
+
+
+
+//String TmpMenuLine= "Row_1,---Main Menu---,run   set_time   sensor_tst   calibrate";	// for testing
+String menu1[5]=
+		{"Row_0,---Main Menu---,run0   set_time0   sensor_tst0   calibrate0",
+		"Row_1,---1st Menu---,run1   set_time1   sensor_tst1   calibrate1",
+		"Row_2,---2nd Menu---,run2   set_time2   sensor_tst2   calibrate2",
+		"Row_3,---3rd Menu---,run3   set_time3   sensor_tst3   calibrate3",
+		"Row_4,---4th Menu---,Yes   No"};
+
+		
+//-------------------------------------------------Menu related variables-------------------------------------------
+
+String MenuName;	// static variable holding name of menu, passed to the menu routines by reference
+int	MenuLineCnt;	// count of lines in string matrix making up menu
+int	MenuIndex;		// index to MenuLine being displayed
+String *MenuPntr;	// pointer to String array that is the menu
+int	MenuMode;		// static variable defining the mode for the menu routines. 1=menu of options, can be multi line, 2=time, 3=date
+boolean MenuUserMadeSelection;	// used to poll if menu result is ready to be read.  If true, result can be read by MenuGetResult()
+
 #define MenuDisplayLen 16	//length of the menu display, 16 chr.
 String MenuLine;		// storage of menu line. to be included in class and private in the future
 String MenuLineName;	// context for the menu operation.  when user selects an option, code passes out the name of the menu line and the selection
 String MenuLineTitle;	// title string for the menuLine.  used on 1st line of display
 String MenuSelection;	// when user selects menu option, the name of the option is passed out.  
 int MenuStartPos,MenuEndPos, MenuPos=0;	//starting, ending, and current position indices of the MenuLine being processed.  Used for scrolling in small displays
-int MenuOptStart, MenuOptEnd ;			// starting and ending position of a selection in the MenuLine.  Used for returning the string of the menu option selected
+unsigned int MenuOptStart, MenuOptEnd ;			// starting and ending position of a selection in the MenuLine.  Used for returning the string of the menu option selected
 
 String MenuPrintString;
 int MaxLinePos;		// max line position to use for printing to LCD.  Takes 16 chr into account.  Used for Substring
@@ -259,7 +290,7 @@ void MenuLineSetup(String Mline)
 	MenuPos = MenuStartPos;							// position index used for scrolling
 	
 	//display the menu title and menu
-	lcd.begin(16, 2);	//unclear why, but this is needed every time else setCursor(0,1) doesn't work.
+	lcd.begin(16, 2);	//unclear why, but this is needed every time else setCursor(0,1) doesn't work....probably scope related.
 	lcd.clear();
 	lcd.setCursor(0,0);
 	lcd.print(MenuLineTitle);
@@ -276,10 +307,27 @@ void MenuLineSetup(String Mline)
 		lcd.print(MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen));		// put up the menu
 	}
 	
-	
-
-
 }
+//------------------------------------------
+void MenuSetup(String mnuName, int mnuLines, String *mnu)
+{
+	/* Starts the Menu passed in by reference. 
+		Menu is an array of MenuLines. We pass in the name of the Menu and the number of MenuLines (starting with 1).
+		The format for MenuLine is as follows:
+		"option1   option2   option3   etc", where there must be at least 2 spaces between menuLine options
+		
+		This routine initializes some Menu specific variables (pointer to array, name of menu, max number of lines, and index
+		After that, it calls a routine to put the first MenuLine on the display
+	*/
+	MenuPntr = mnu;			// variable to hold a pointer to the String array that is the menu
+	MenuName = mnuName;		// name of the Menu, returned when user makes a selection
+	MenuIndex = 0;			// initialize index to MenuLine within String array that is the Menu
+	MenuLineCnt = mnuLines-1;	// max number of MenuLines in the menu, starting with 1
+	MenuMode=1;				// set mode to process array of MenuLines (not time or date)
+	MenuUserMadeSelection=false;	// flag indicating menu not ready to be read.  If true, user made selection
+	MenuLineSetup(*MenuPntr); // extract and display MenuLine[0]
+}
+
 
 //------------------------------------------
 	/*
@@ -299,15 +347,16 @@ void MenuLineSetup(String Mline)
 void setup()
 {
  
-  Serial.begin(9600);
+	Serial.begin(9600);
   
-  KeyPoll(true);
-  
+	KeyPoll(true);	// Begin polling the keypad  
 
 	//initialize display
 	LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
-	MenuLineSetup(TmpMenuLine); // set up and display MenuLine 	
+	MenuSetup("Menu1",5,menu1); // Prepare Menu1 and display the first MenuLine, array has 5 lines (starting at 1)
+	
+	//MenuLineSetup(TmpMenuLine); // set up and display MenuLine 	
 
 }
 //--------------------------------------------------------main loop -------------------------------
@@ -317,151 +366,183 @@ void loop()
 	Tmr.update();
 	if (ReadKey() != NO_KEY)
 	{
-	
-		int oldPos=MenuPos;		// holds prior position of MenuPos
-		if(LS_curKey==RIGHT_KEY)
+		switch (MenuMode)
 		{
-			
-			MenuPos = MenuAdvToSpace(MenuLine,MenuPos);	//skip past menu option to space
-			//debugPrint("advanced to space on calebrate ");
-
-			if (MenuPos >= MenuEndPos)
+			case (1):	// this is an array of 1 or more menuLines, where each menuLine has a title and options.
 			{
-				// if here then the we just went past the last option on the menuLine, so restore prior MenuPos and do nothing
-				MenuPos = oldPos;
-				//debugPrint("menupos>menuEndPos, do nothing ");
-			}
-			else
-			{
-				// if here then we are not at the end of the menuLine, so advance to next menu option
-				MenuPos= MenuAdvPastSpace(MenuLine,MenuPos);
-				lcd.begin(16, 2);
-				lcd.clear();
-				lcd.setCursor(0,0);
-				lcd.print(MenuLineTitle);
-				lcd.setCursor(0,1);
-				if (MenuPos+MenuDisplayLen < MenuEndPos)
+				int oldPos=MenuPos;		// holds prior position of MenuPos
+				switch (LS_curKey)
 				{
-					if (MenuPos>MenuStartPos)
+					case (RIGHT_KEY):
 					{
-						//if here, then there is more menuline to left and right of display
-						lcd.print('<'+MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-2)+'>');
-						//debugPrint("Right, more on rt and lt ");
-					} 
-					else
-					{
-						//if here then the menuline starts on left of display and extends past display
-						lcd.print(MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-1)+'>');
-						//debugPrint("Right, fits on lt, more on rt ");
-					}
+						MenuPos = MenuAdvToSpace(MenuLine,MenuPos);	//skip past menu option to space
+						//debugPrint("advanced to space on calebrate ");
 
-				} 
-				else
-				{
-					if (MenuPos>MenuStartPos) //just switched
+						if (MenuPos >= MenuEndPos)
+						{
+							// if here then the we just went past the last option on the menuLine, so restore prior MenuPos and do nothing
+							MenuPos = oldPos;
+							//debugPrint("menupos>menuEndPos, do nothing ");
+						}
+						else
+						{
+							// if here then we are not at the end of the menuLine, so advance to next menu option
+							MenuPos= MenuAdvPastSpace(MenuLine,MenuPos);
+							lcd.begin(16, 2);
+							lcd.clear();
+							lcd.setCursor(0,0);
+							lcd.print(MenuLineTitle);
+							lcd.setCursor(0,1);
+							if (MenuPos+MenuDisplayLen < MenuEndPos)
+							{
+								if (MenuPos>MenuStartPos)
+								{
+									//if here, then there is more menuline to left and right of display
+									lcd.print('<'+MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-2)+'>');
+									//debugPrint("Right, more on rt and lt ");
+								}
+								else
+								{
+									//if here then the menuline starts on left of display and extends past display
+									lcd.print(MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-1)+'>');
+									//debugPrint("Right, fits on lt, more on rt ");
+								}
+
+							}
+							else
+							{
+								if (MenuPos>MenuStartPos) //just switched
+								{
+									//if here, menuline extends past left of display and fits on right side of display
+									lcd.print('<'+MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-1));
+									//debugPrint("Right, more on lt, fits on rt");
+								}
+								else
+								{
+									//if here, then menuline fits in display
+									lcd.print(MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen));
+									//debugPrint("Right, fits in display ");
+									
+								}
+							}
+							
+						}
+						break;
+					}// done processing RIGHT_KEY
+					
+					case (LEFT_KEY):
 					{
-						//if here, menuline extends past left of display and fits on right side of display
-						lcd.print('<'+MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-1));
-						//debugPrint("Right, more on lt, fits on rt");
-					} 
-					else
-					{
-						//if here, then menuline fits in display
-						lcd.print(MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen));
-						//debugPrint("Right, fits in display ");										
+
+						lcd.begin(16, 2);
+						lcd.clear();
+						lcd.setCursor(0, 0);
+						lcd.print(MenuLineTitle);	// put up the title
+						lcd.setCursor(0,1);
 						
-					}
-				}
+						if (MenuPos <= MenuStartPos)
+						{
+							// if here then the we just are at the beginning of the menu, so don't back up
+							lcd.print(MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-1)+'>');	// put up as much as will fit for the menu, with indicator that there is more
+							//debugPrint("Left, at beginning, no check of len ");
+						}
+						else
+						{
+							// if here then we are not at the beginning of the menuLine, so backup to previous menu option
+							MenuPos= MenuBkupPastSpace(MenuLine,MenuPos-1);	//backs menuPos to the end of the previous menu option
+							MenuPos = MenuBkupToSpace(MenuLine,MenuPos)+1;	//MenuPos now at the first char of the previous menu option
+							if (MenuPos+MenuDisplayLen < MenuEndPos)
+							{
+								if (MenuPos>MenuStartPos)
+								{
+									//if here, then there is more menuLine before and after the display window
+									lcd.print('<'+MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-2)+'>');
+									//debugPrint("Left, more on lt and rt ");
+								}
+								else
+								{
+									//if here, then at the start of the menuline with more menu after the display window
+									lcd.print(MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-1)+'>');
+									//debugPrint("Left, fit on lt, more on Rt ");
+								}
+
+							}
+							else
+							{
+								if (MenuPos>MenuStartPos)
+								{
+									// if here then some menuline to the left of display window but the remaining menu options fit on the display
+									lcd.print('<'+MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-1));
+									//debugPrint("Left, more on lt, fit on rt");
+								}
+								else
+								{
+									// if here then some menuline fits in the the display
+									lcd.print(MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen));
+									//debugPrint("Left, fits display ");
+								}
+							}
+						}
+						break;
+
+					}// done processing LEFT_KEY
+					
+					case (SELECT_KEY ):
+					{
+						// get the option that starts at MenuPoss
+						MenuOptStart=MenuPos;
+						MenuOptEnd =( MenuAdvToSpace(MenuLine,MenuPos));
+						//Serial.print("MenuSelection=");Serial.print(MenuLine.substring(MenuOptStart,MenuOptEnd));Serial.print("  MenuStartPos=");Serial.print(MenuStartPos);Serial.print("  menuOptStart=");Serial.print(MenuOptStart);Serial.print("   menuOptEnd=");Serial.print(MenuOptEnd);Serial.print("   selection length=");Serial.println(MenuSelection.length());
+						MenuSelection=MenuLine.substring(MenuOptStart,MenuOptEnd);	// get the string of the option
+						MenuUserMadeSelection=true;	//polling routine will see this and fetch results found in MenuName, MenuLineName, MenuSelection
+						break;		// end processing SELECT_KEY
+					}	// done with SELECT_KEY
+					
+					case (UP_KEY):
+					{
+						// user wants to display MenuLine 'above' the current MenuLine where [0] is the highest
+						if (MenuIndex!=0)
+						{
+							MenuIndex--;	//decrement MenuIndex
+							MenuLineSetup(*(MenuPntr+MenuIndex)); // extract and display MenuLine[MenuIndex]							
+						}							
+						break;
+					}	// done with UP_KEY
+					
+					case (DOWN_KEY):
+					{
+						// user wants to display MenuLine 'below' the current MenuLine where [MaxLines] is the Lowest
+						if (MenuIndex!=MenuLineCnt)
+						{
+							MenuIndex++;	//Increment MenuIndex
+							MenuLineSetup(*(MenuPntr+MenuIndex)); // extract and display MenuLine[MenuLineCnt]
+						}
+						break;
+					}	// done with DOWN_KEY
+				}	// end switch Ls_Key
+			}	// end case menuOption = 1
+
+			case(2):
+			{
 				
-			}	
+			} // end case menuOption = 2 = time
 			
-		}
-		
-		if(LS_curKey==LEFT_KEY)
-		{
-
-			lcd.begin(16, 2);
-			lcd.clear();
-			lcd.setCursor(0, 0);
-			lcd.print(MenuLineTitle);	// put up the title
-			lcd.setCursor(0,1);
-								
-			if (MenuPos <= MenuStartPos)
+			case (3):
 			{
-				// if here then the we just are at the beginning of the menu, so don't back up
-				lcd.print(MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-1)+'>');	// put up as much as will fit for the menu, with indicator that there is more
-				//debugPrint("Left, at beginning, no check of len ");
-			}
-			else
-			{
-				// if here then we are not at the beginning of the menuLine, so backup to previous menu option
-				MenuPos= MenuBkupPastSpace(MenuLine,MenuPos-1);	//backs menuPos to the end of the previous menu option
-				MenuPos = MenuBkupToSpace(MenuLine,MenuPos)+1;	//MenuPos now at the first char of the previous menu option
+				
+			}	// end case menuOption = 3 = date
 
-				if (MenuPos+MenuDisplayLen < MenuEndPos)
-				{
-					if (MenuPos>MenuStartPos)
-					{
-							//if here, then there is more menuLine before and after the display window
-							lcd.print('<'+MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-2)+'>');
-							//debugPrint("Left, more on lt and rt ");
-					} 
-					else
-					{
-							//if here, then at the start of the menuline with more menu after the display window
-							lcd.print(MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-1)+'>');
-							//debugPrint("Left, fit on lt, more on Rt ");						
-					}
-
-				}
-				else
-				{
-					if (MenuPos>MenuStartPos)
-					{
-						// if here then some menuline to the left of display window but the remaining menu options fit on the display
-						lcd.print('<'+MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen-1));
-						//debugPrint("Left, more on lt, fit on rt");
-					} 
-					else
-					{
-						// if here then some menuline fits in the the display
-						lcd.print(MenuLine.substring(MenuPos,MenuPos+MenuDisplayLen));
-						//debugPrint("Left, fits display ");
-					}
-					
-
-				}
-						
-			}
-					
-		} 
-		
-		// get the option that starts at MenuPos
-		MenuOptStart=MenuPos;
-		MenuOptEnd =( MenuAdvToSpace(MenuLine,MenuPos));
-		Serial.print("menu option=");
-		Serial.println(MenuLine.substring(MenuOptStart,MenuOptEnd));
-		
-
-			
+		}	// end switch MenuMode
 	}//if (ReadKey() != NO_KEY)
-}
+	
+	if(	MenuUserMadeSelection==true)
+	{
+		//If here, then user has made a menu selection, passing results through MenuName, MenuLineName, MenuSelection
+		Serial.println("----------------------------------------------------------");
+		Serial.println(MenuName);
+		Serial.println(MenuLineName	);
+		Serial.println(MenuSelection);
+		Serial.println("");
+		MenuUserMadeSelection=false;
+	}	// end MenuUserMadeSelection=true	
+} // end main loop
 
-void doSomething(void* context)
-{
-  int time = (int)context;
-  Serial.print(time);
-  Serial.print(" second tick: millis()=");
-  Serial.println(millis());
-}
-
-
-void doAfter(void* context)
-{
-  int time = (int)context;
-  Serial.print("stopping the led event after ");
-  Serial.print(time);
-  Serial.println(" seconds.");
-  Tmr.stop(ledEvent);
-  Tmr.oscillate(13, 500, HIGH, 5);
-}
