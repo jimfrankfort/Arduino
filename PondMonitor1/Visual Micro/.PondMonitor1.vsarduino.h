@@ -9,7 +9,6 @@
 */
 
 #define __AVR_ATmega2560__
-#define _VMDEBUG 1
 #define ARDUINO 106
 #define ARDUINO_MAIN
 #define F_CPU 16000000L
@@ -20,15 +19,10 @@ void KeyPoll(boolean start);
 void CheckKey(void* context);
 void GetKey(void* context);
 int ReadKey(void);
-int MenuAdvPastSpace (String Mline, int Start);
-int MenuAdvToSpace (String Mline, int Start);
-int MenuBkupPastSpace (String Mline, int Start);
-int MenuBkupToSpace (String Mline, int Start);
-void MenuLineSetup(String Mline);
-void MenuSetup(String mnuName, int mnuLines, String *mnu);
 //
 //
 
 #include "C:\Program Files (x86)\Arduino\hardware\arduino\variants\mega\pins_arduino.h" 
 #include "C:\Program Files (x86)\Arduino\hardware\arduino\cores\arduino\arduino.h"
 #include <PondMonitor1.pde>
+#include <PondMonitorGlobals.h>

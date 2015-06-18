@@ -18,8 +18,7 @@
     <ToolchainFlavour>Native</ToolchainFlavour>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
-    <OverrideVtorValue>
-    </OverrideVtorValue>
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <ProgFlashFromRam>true</ProgFlashFromRam>
     <RamSnippetAddress>0x20000000</RamSnippetAddress>
@@ -53,7 +52,6 @@
   <avrgcc.compiler.symbols.DefSymbols>
     <ListValues>
       <Value>__AVR_ATmega2560__</Value>
-      <Value>_VMDEBUG=1</Value>
       <Value>ARDUINO=106</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
@@ -71,10 +69,6 @@
       <Value>C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/libraries</Value>
       <Value>C:/Program Files (x86)/Arduino/libraries</Value>
-      <Value>C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/utility</Value>
-      <Value>C:/Program Files (x86)/Arduino/libraries/LiquidCrystal</Value>
-      <Value>C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer/utility</Value>
-      <Value>C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer</Value>
       <Value>../../PondMonitor1</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/variants/mega</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/cores/arduino</Value>
@@ -90,7 +84,6 @@
   <avrgcccpp.compiler.symbols.DefSymbols>
     <ListValues>
       <Value>__AVR_ATmega2560__</Value>
-      <Value>_VMDEBUG=1</Value>
       <Value>ARDUINO=106</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
@@ -108,10 +101,6 @@
       <Value>C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/libraries</Value>
       <Value>C:/Program Files (x86)/Arduino/libraries</Value>
-      <Value>C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/utility</Value>
-      <Value>C:/Program Files (x86)/Arduino/libraries/LiquidCrystal</Value>
-      <Value>C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer/utility</Value>
-      <Value>C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer</Value>
       <Value>../../PondMonitor1</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/variants/mega</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/cores/arduino</Value>
@@ -122,10 +111,30 @@
   <avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>
   <avrgcccpp.compiler.optimization.DebugLevel>Default (-g2)</avrgcccpp.compiler.optimization.DebugLevel>
   <avrgcccpp.compiler.warnings.AllWarnings>True</avrgcccpp.compiler.warnings.AllWarnings>
+  <avrgcccpp.linker.libraries.Libraries>
+    <ListValues>
+      <Value>Menu.cpp</Value>
+      <Value>Menu.h</Value>
+      <Value>LiquidCrystal.cpp</Value>
+      <Value>LiquidCrystal.h</Value>
+      <Value>Event.cpp</Value>
+      <Value>Event.h</Value>
+      <Value>Timer.cpp</Value>
+      <Value>Timer.h</Value>
+    </ListValues>
+  </avrgcccpp.linker.libraries.Libraries>
+  <avrgcccpp.linker.libraries.LibrarySearchPaths>
+    <ListValues>
+      <Value>C:\Users\Jim Frankfort\Documents\Arduino\PondMonitor1</Value>
+      <Value>C:\Program Files (x86)\Arduino\libraries\LiquidCrystal</Value>
+      <Value>C:\Users\Jim Frankfort\Documents\Arduino\libraries\Timer</Value>
+      <Value>C:\Users\Jim Frankfort\Documents\Arduino\libraries\Menu</Value>
+    </ListValues>
+  </avrgcccpp.linker.libraries.LibrarySearchPaths>
   <avrgcccpp.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcccpp.assembler.debugging.DebugLevel>
 </AvrGccCpp>
     </ToolchainSettings>
-    <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/hardware/arduino/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/variants/mega;../../PondMonitor1;C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer;C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer/utility;C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/Jim Frankfort/Documents/Arduino/libraries;c:/program files (x86)/arduino/hardware/tools/avr/avr/include/;c:/program files (x86)/arduino/hardware/tools/avr/avr/include/avr/;c:/program files (x86)/arduino/hardware/tools/avr/avr/;c:/program files (x86)/arduino/hardware/tools/avr/lib/gcc/avr/4.3.2/include/;;C:/Program Files (x86)/Arduino/hardware/arduino/variants/standard;C:/Program Files (x86)/Arduino/libraries/LiquidCrystal;C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/utility;</VMSETTING_IncludePaths>
+    <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/hardware/arduino/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/variants/mega;../../PondMonitor1;C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer;C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer/utility;C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/Jim Frankfort/Documents/Arduino/libraries;c:/program files (x86)/arduino/hardware/tools/avr/avr/include/;c:/program files (x86)/arduino/hardware/tools/avr/avr/include/avr/;c:/program files (x86)/arduino/hardware/tools/avr/avr/;c:/program files (x86)/arduino/hardware/tools/avr/lib/gcc/avr/4.3.2/include/;;C:/Program Files (x86)/Arduino/hardware/arduino/variants/standard;C:/Program Files (x86)/Arduino/libraries/LiquidCrystal;C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/utility;C:/Users/Jim Frankfort/Documents/Arduino/libraries/LS_Key;C:/Users/Jim Frankfort/Documents/Arduino/libraries/LS_Key/utility;</VMSETTING_IncludePaths>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <ToolchainSettings>
@@ -140,7 +149,6 @@
   <avrgcc.compiler.symbols.DefSymbols>
     <ListValues>
       <Value>__AVR_ATmega2560__</Value>
-      <Value>_VMDEBUG=1</Value>
       <Value>ARDUINO=106</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
@@ -158,10 +166,6 @@
       <Value>C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/libraries</Value>
       <Value>C:/Program Files (x86)/Arduino/libraries</Value>
-      <Value>C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/utility</Value>
-      <Value>C:/Program Files (x86)/Arduino/libraries/LiquidCrystal</Value>
-      <Value>C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer/utility</Value>
-      <Value>C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer</Value>
       <Value>../../PondMonitor1</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/variants/mega</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/cores/arduino</Value>
@@ -177,7 +181,6 @@
   <avrgcccpp.compiler.symbols.DefSymbols>
     <ListValues>
       <Value>__AVR_ATmega2560__</Value>
-      <Value>_VMDEBUG=1</Value>
       <Value>ARDUINO=106</Value>
       <Value>ARDUINO_MAIN</Value>
       <Value>F_CPU=16000000L</Value>
@@ -195,10 +198,6 @@
       <Value>C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/libraries</Value>
       <Value>C:/Program Files (x86)/Arduino/libraries</Value>
-      <Value>C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/utility</Value>
-      <Value>C:/Program Files (x86)/Arduino/libraries/LiquidCrystal</Value>
-      <Value>C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer/utility</Value>
-      <Value>C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer</Value>
       <Value>../../PondMonitor1</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/variants/mega</Value>
       <Value>C:/Program Files (x86)/Arduino/hardware/arduino/cores/arduino</Value>
@@ -209,10 +208,30 @@
   <avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcccpp.compiler.optimization.AllocateBytesNeededForEnum>
   <avrgcccpp.compiler.optimization.DebugLevel>Default (-g2)</avrgcccpp.compiler.optimization.DebugLevel>
   <avrgcccpp.compiler.warnings.AllWarnings>True</avrgcccpp.compiler.warnings.AllWarnings>
+  <avrgcccpp.linker.libraries.Libraries>
+    <ListValues>
+      <Value>Menu.cpp</Value>
+      <Value>Menu.h</Value>
+      <Value>LiquidCrystal.cpp</Value>
+      <Value>LiquidCrystal.h</Value>
+      <Value>Event.cpp</Value>
+      <Value>Event.h</Value>
+      <Value>Timer.cpp</Value>
+      <Value>Timer.h</Value>
+    </ListValues>
+  </avrgcccpp.linker.libraries.Libraries>
+  <avrgcccpp.linker.libraries.LibrarySearchPaths>
+    <ListValues>
+      <Value>C:\Users\Jim Frankfort\Documents\Arduino\PondMonitor1</Value>
+      <Value>C:\Program Files (x86)\Arduino\libraries\LiquidCrystal</Value>
+      <Value>C:\Users\Jim Frankfort\Documents\Arduino\libraries\Timer</Value>
+      <Value>C:\Users\Jim Frankfort\Documents\Arduino\libraries\Menu</Value>
+    </ListValues>
+  </avrgcccpp.linker.libraries.LibrarySearchPaths>
   <avrgcccpp.assembler.debugging.DebugLevel>Default (-Wa,-g)</avrgcccpp.assembler.debugging.DebugLevel>
 </AvrGccCpp>
     </ToolchainSettings>
-    <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/hardware/arduino/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/variants/mega;../../PondMonitor1;C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer;C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer/utility;C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/Jim Frankfort/Documents/Arduino/libraries;c:/program files (x86)/arduino/hardware/tools/avr/avr/include/;c:/program files (x86)/arduino/hardware/tools/avr/avr/include/avr/;c:/program files (x86)/arduino/hardware/tools/avr/avr/;c:/program files (x86)/arduino/hardware/tools/avr/lib/gcc/avr/4.3.2/include/;;C:/Program Files (x86)/Arduino/hardware/arduino/variants/standard;C:/Program Files (x86)/Arduino/libraries/LiquidCrystal;C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/utility;</VMSETTING_IncludePaths>
+    <VMSETTING_IncludePaths>C:/Program Files (x86)/Arduino/hardware/arduino/cores/arduino;C:/Program Files (x86)/Arduino/hardware/arduino/variants/mega;../../PondMonitor1;C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer;C:/Users/Jim Frankfort/Documents/Arduino/libraries/Timer/utility;C:/Program Files (x86)/Arduino/libraries;C:/Program Files (x86)/Arduino/hardware/arduino/libraries;C:/Program Files (x86)/Visual Micro/Visual Micro for Arduino/Micro Platforms/default/debuggers;C:/Users/Jim Frankfort/Documents/Arduino/libraries;c:/program files (x86)/arduino/hardware/tools/avr/avr/include/;c:/program files (x86)/arduino/hardware/tools/avr/avr/include/avr/;c:/program files (x86)/arduino/hardware/tools/avr/avr/;c:/program files (x86)/arduino/hardware/tools/avr/lib/gcc/avr/4.3.2/include/;;C:/Program Files (x86)/Arduino/hardware/arduino/variants/standard;C:/Program Files (x86)/Arduino/libraries/LiquidCrystal;C:/Program Files (x86)/Arduino/libraries/LiquidCrystal/utility;C:/Users/Jim Frankfort/Documents/Arduino/libraries/LS_Key;C:/Users/Jim Frankfort/Documents/Arduino/libraries/LS_Key/utility;</VMSETTING_IncludePaths>
   </PropertyGroup>
   <ItemGroup>
     <None Include="PondMonitor1.pde">
@@ -223,6 +242,9 @@
     <Folder Include="Visual Micro\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PondMonitorGlobals.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Visual Micro\.PondMonitor1.vsarduino.h">
       <SubType>compile</SubType>
     </Compile>

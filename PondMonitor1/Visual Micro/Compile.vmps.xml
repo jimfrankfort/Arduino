@@ -3,36 +3,10 @@
     <Platform Name="arduino10x" Package="arduino" Platform="avr" Architecture="avr">
       <Board Name="mega2560" Description="Arduino Mega 2560 or Mega ADK" CoreFolder="C:\Program Files (x86)\Arduino\hardware\arduino\cores\arduino" VariantFullPath="C:\Program Files (x86)\Arduino\hardware\arduino\variants\mega" McuIdePath="C:\Program Files (x86)\Arduino" McuSketchBookPath="C:\Users\Jim Frankfort\Documents\Arduino" name="Arduino Mega 2560 or Mega ADK" upload.protocol="wiring" upload.maximum_size="258048" upload.speed="115200" bootloader.low_fuses="0xFF" bootloader.high_fuses="0xD8" bootloader.extended_fuses="0xFD" bootloader.path="stk500v2" bootloader.file="stk500boot_v2_mega2560.hex" bootloader.unlock_bits="0x3F" bootloader.lock_bits="0x0F" build.mcu="atmega2560" build.f_cpu="16000000L" build.core="arduino" build.variant="mega" runtime.ide.path="C:\Program Files (x86)\Arduino" build.system.path="C:\Program Files (x86)\Arduino\hardware\arduino\system" runtime.ide.version="106" originalid="mega2560" vm.platform.root.path="C:\Program Files (x86)\Visual Micro\Visual Micro for Arduino\Micro Platforms\arduino10x" ide.hint="Arduino 0023 and 1.0.x Ide" ide.location.key="Arduino" ide.location.ide.winreg="Arduino 1.0.x Application" ide.location.sketchbook.winreg="Arduino 1.0.x Sketchbook" ide.location.sketchbook.preferences="sketchbook.path" ide.location.sketchbook.default="%MYDOCUMENTS%\arduino" ide.location.preferences="%VM_APPDATA_ROAMING%\arduino\preferences.txt" ide.default.package="arduino" ide.default.platform="avr" ide.multiplatform="true" ide.includes="arduino.h" ide.platformswithoutpackage="true" ide.includes.fallback="wprogram.h" ide.extension="ino" ide.extension.fallback="pde" ide.versionLTEQ="149" ide.exe="arduino.exe" ide.hosts="atmel" ide.url="http://arduino.cc/en/Main/Software" vm.debug="true" software="ARDUINO" ide.appid="arduino10x" location.sketchbook="C:\Users\Jim Frankfort\Documents\Arduino" build.core.vmresolved="C:\Program Files (x86)\Arduino\hardware\arduino\cores\arduino" build.core.parentfolder.vmresolved="C:\Program Files (x86)\Arduino\hardware\arduino\cores" build.core.coresparentfolder.vmresolved="C:\Program Files (x86)\Arduino\hardware\arduino" vm.core.include="arduino.h" build.board="AVR_MEGA2560" vm.boardsource.path="C:\Program Files (x86)\Arduino\hardware\arduino" runtime.platform.path="C:\Program Files (x86)\Arduino\hardware\arduino" vm.platformname.name="avr" build.arch="AVR" build.variant.vmresolved="C:\Program Files (x86)\Arduino\hardware\arduino\variants\mega" vm.runtime.compiler.showwarnings="false" />
     </Platform>
-    <Compile CompilerErrors="0" ConfigurationName="Debug" StopOnError="False" OptimiseLibs="True" OptimiseCore="True" BuildPath="C:\Users\Jim Frankfort\AppData\Local\V.Micro\Arduino\Builds\PondMonitor1\mega2560" IsDebugStart="1" SketchName="PondMonitor1" ReportDigitalPins="0" ReportAnalogPins="0" ReportI2C="0" ReportFreeMemory="0" IncludeDebug="1" LastDebugPreProcessorDefinitions="VM_DEBUG;VM_DEBUG_ENABLE 1;VM_DEBUG_BANDWIDTH_THROTTLE_MS 100;VM_DEBUGGER_TYPE_HARDWARESERIAL 0;VM_DEBUGGER_TYPE_SOFTWARESERIAL 1;VM_DEBUGGER_TYPE_FASTSERIAL 2;VM_DEBUGGER_TYPE_USB 3;VM_DEBUGGER_TYPE_TEENSY 4;VM_DEBUGGER_TYPE_UART 5;VM_DEBUGGER_TYPE_USART 6;VM_DEBUGGER_TYPE_USBSERIAL 7;VM_DEBUGGER_TYPE_TTYUART 8;VM_DEBUGGER_TYPE_NET_CONSOLE 9;VM_DEBUGGER_TYPE_Uart 10;VM_DEBUGGER_TYPE_COSA 11;VM_DEBUGGER_TYPE VM_DEBUGGER_TYPE_HARDWARESERIAL;VM_DEBUG_BREAKPAUSE;" IncludesDebug="1" IsCompiled="1" />
-    <Debug EnableBreak="1" DebugEnabled="1" RemotePortSpeedWrittenToDebugSource="9600" />
+    <Compile IsCompiled="0" ConfigurationName="Debug" StopOnError="False" OptimiseLibs="True" OptimiseCore="True" BuildPath="C:\Users\Jim Frankfort\AppData\Local\V.Micro\Arduino\Builds\PondMonitor1\mega2560" IsDebugStart="0" AutoGeneratePrototypes="" IncludeDebug="0" IncludesDebug="0" SketchName="PondMonitor1" CompilerErrors="1" />
+    <Debug EnableBreak="1" DebugEnabled="0" />
     <VCCodeModel>
       <VCCodeMacros />
     </VCCodeModel>
-    <BreakPoints>
-      <BreakPoint Index="1" Name="PondMonitor1.pde, line 280 character 1" Id="a8a1742a-7e7f-44ec-8626-d22693abd5ba" Enabled="1" Message="{MenuLineName} {MenuLineTitle}" MessageTextType="2" PreProcessedMessage="{0} {1}" Condition="" ConditionType="1" CurrentHits="0" File="c:\users\jim frankfort\documents\arduino\pondmonitor1\pondmonitor1.pde" FileLine="280" FileColumn="1" FunctionName="" FunctionLineOffset="1" FunctionColumnOffset="1" HitCountTarget="1" HitCountType="1" Language="AVR GCC" LocationType="3" Tag="&lt;vmbp Id='a8a1742a-7e7f-44ec-8626-d22693abd5ba'/&gt;" Type="1" ToString="System.__ComObject" BreakWhenHit="0">
-        <Source>273		// This routine parses out the MenuLineName, Title, and MenuLine.  It then displays the Title on the first row of the display, and the menuLine on the 
-274		// second row of the display.
-275		//
-276		// note: The menuline processing handles the left and right keys, moving the menuLine options accordingly.  When the user selects an option, the menu
-277		// processing will return the MenuLineName and MenuOption, both of which can be used to direct logic.  The Menu processing will change menuLines based on
-278		// the up and down buttons.  Details of menuLine and menu processing are addressed in appropriate areas of code.
-279		
---&gt;280		
-281		int tmp1,tmp2;
-282		tmp1= Mline.indexOf(',');						// get position of comma, used to parse
-283		MenuLineName= Mline.substring(0, tmp1);			// get MenuLineName
-284		tmp2=Mline.indexOf(',', tmp1+1);				// position of next comma
-285		MenuLineTitle = Mline.substring(tmp1+1,tmp2);	// get MenuLineTitle
-286		MenuLine = "                        "+ Mline.substring(tmp2+1,Mline.length());	//snip out the menu options and pre-pend with spaces
-287		MenuEndPos = MenuLine.length();					// set the end of the menu position pointer
-288		MenuLine += "                    ";				// pad the menuLine with spaces at the end with menu line
-289		MenuStartPos = MenuAdvPastSpace(MenuLine,0);	// find the first non-space chr
-</Source>
-        <MessageVariables>
-          <MessageVariable Name="MenuLineName" Index="1" />
-          <MessageVariable Name="MenuLineTitle" Index="2" />
-        </MessageVariables>
-      </BreakPoint>
-    </BreakPoints>
   </Program>
 </VisualMicro>
