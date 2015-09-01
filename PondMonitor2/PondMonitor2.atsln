@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{E66E83B9-2572-4076-B26E-6BE79FF3018A}") = "PondMonitor2", "PondMonitor2.cppproj", "{18C68D0A-9E7E-4178-9C79-0AAF3398544A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{18C68D0A-9E7E-4178-9C79-0AAF3398544A}.Debug|AVR.ActiveCfg = Debug|AVR
+		{18C68D0A-9E7E-4178-9C79-0AAF3398544A}.Debug|AVR.Build.0 = Debug|AVR
+		{18C68D0A-9E7E-4178-9C79-0AAF3398544A}.Release|AVR.ActiveCfg = Release|AVR
+		{18C68D0A-9E7E-4178-9C79-0AAF3398544A}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

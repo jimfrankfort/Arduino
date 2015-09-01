@@ -16,9 +16,16 @@
 #define __AVR__
 extern "C" void __cxa_pure_virtual() {;}
 
+void CursorBlinkIntRedirect(void* context);
+void KeyPoll(boolean start);
+void CheckKey(void* context);
+void GetKey(void* context);
+int ReadKey(void);
+void SysTimePoll(boolean start);
+void GetSysTime(void* context);
 //
 //
 
 #include "C:\Program Files (x86)\Arduino\hardware\arduino\variants\mega\pins_arduino.h" 
 #include "C:\Program Files (x86)\Arduino\hardware\arduino\cores\arduino\arduino.h"
-#include <z_stringplay1.ino>
+#include <PondMonitor2.pde>
